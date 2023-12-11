@@ -1,4 +1,6 @@
-const file = await Deno.readTextFile("./input.txt");
+import read from "https://deno.land/x/read@v0.1.1/mod.ts";
+
+const file = await read();
 const start = performance.now();
 
 const [times, distances] = file.split("\n").map(line => {
