@@ -1,3 +1,4 @@
+from functools import cache
 import re
 
 expr = re.compile(r'Valve (\w+) has flow rate\=(\d+)\; tunnel(?:s?) lead(?:s?) to valve(?:s?) (.+)$')
@@ -30,14 +31,11 @@ distances = {source: {target: distance(source, target) for target in active} for
 indices = {valve: i for i, valve in enumerate(active)}
 
 total_minutes = 26
-cache = {}
 
+@cache
 def pressure(source, remaining, mask = 0):
-    key = (remaining, source, mask)
-    if key in cache:
-        return cache[key]
-
     max_pressure = 0
+
     for target in active:
         bit = 1 << indices[target]
         if mask & bit:
@@ -52,7 +50,6 @@ def pressure(source, remaining, mask = 0):
                 added_pressure + pressure(target, remaining - time, mask | bit)
             )
 
-    cache[key] = max_pressure
     return max_pressure
 
 all_open = (1 << len(active)) - 1
