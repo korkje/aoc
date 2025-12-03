@@ -1,4 +1,12 @@
-.vscode
-.DS_Store
-input.txt
+# AOC
 example*.txt
+input.txt
+
+# VS Code, Cursor, ...
+.vscode
+
+# macOS
+.DS_Store
+
+# Python
+.venv
