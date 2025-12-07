@@ -1,10 +1,2 @@
-from functools import reduce
-from operator import add, mul
-import re
-
-lines = open(0).read().splitlines()
-cols = zip(*[re.split(r"\s+", line.strip()) for line in lines])
-
-operators = { "+": add, "*": mul }
-
-print(sum(reduce(operators[o], map(int, ns)) for *ns, o in cols))
+cols = zip(*[line.strip().split() for line in open(0)])
+print(sum(eval(o.join(ns)) for *ns, o in cols))
