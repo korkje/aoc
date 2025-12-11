@@ -1,27 +1,9 @@
-from collections import deque, defaultdict
+from functools import cache
 
-lines = [line.split() for line in open(0)]
-devices = {line[0][:-1]: line[1:] for line in lines}
-required = {"dac", "fft"}
+devices = {k.rstrip(":"): v for k, *v in map(str.split, open(0))}
 
-states = defaultdict(int, {("svr", frozenset()): 1})
-queue = deque([("svr", frozenset())])
-paths = 0
+@cache
+def paths(d, r):
+    return int(not r) if d == "out" else sum(paths(d, r - {d}) for d in devices[d])
 
-while queue:
-    current, seen = queue.popleft()
-    count = states[(current, seen)]
-    states[(current, seen)] = 0
-
-    for device in devices[current]:
-        if device == "out":
-            if required.issubset(seen):
-                paths += count
-        else:
-            state = (device, seen | (required & {device}))
-            if states[state] == 0:
-                queue.append(state)
-
-            states[state] += count
-
-print(paths)
+print(paths("svr", frozenset(["dac", "fft"])))

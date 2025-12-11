@@ -1,15 +1,6 @@
-lines = [line.split() for line in open(0)]
-devices = {line[0][:-1]: line[1:] for line in lines}
+devices = {k.rstrip(":"): v for k, *v in map(str.split, open(0))}
 
-queue = [("you", set())]
-paths = 0
+def paths(d):
+    return 1 if d == "out" else sum(map(paths, devices[d]))
 
-while queue:
-    current, seen = queue.pop()
-    for device in devices[current]:
-        if device == "out":
-            paths += 1
-        elif device not in seen:
-            queue.append((device, seen | {device}))
-
-print(paths)
+print(paths("you"))
